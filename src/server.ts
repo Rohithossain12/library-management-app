@@ -18,7 +18,7 @@ async function main() {
         })
 
     } catch (error) {
-        console.log(error);
+        console.log(" Failed to connect to DB", error);
     }
 }
 
