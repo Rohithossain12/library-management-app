@@ -17,7 +17,7 @@ booksRouter.post("/", async (req: Request, res: Response) => {
 
 // get all books
 booksRouter.get("/", async (req: Request, res: Response) => {
-    const books = await Book.find().populate('user')
+    const books = await Book.find()
 
     res.status(201).json({
         success: true,
@@ -65,7 +65,7 @@ booksRouter.patch("/:bookId", async (req: Request, res: Response) => {
         res.status(201).json({
             success: true,
             message: " Book deleted successfully",
-            data: book
+            data: null
         })
 
 

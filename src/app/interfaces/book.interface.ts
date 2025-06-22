@@ -2,7 +2,7 @@
 export interface IBook {
     title:string,
     author:string,
-    genre:"SCIENCE" |  "BIOGRAPHY"|  "FANTASY"|  "PHILOSOPHY"| "HISTORY"|"POETRY"| "FICTION",
+    genre:"FICTION" |  "NON_FICTION"|  "SCIENCE"|  "HISTORY"| "BIOGRAPHY"|"FANTASY",
     isbn:string,
     description:string,
     copies:number,
