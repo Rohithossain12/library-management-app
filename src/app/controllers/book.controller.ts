@@ -18,19 +18,47 @@ booksRouter.post("/", async (req: Request, res: Response, next) => {
     }
 });
 
-// Get all books
+
+// Get all books with filter, sort, limit
 booksRouter.get("/", async (req: Request, res: Response, next) => {
     try {
-        const books = await Book.find();
+        const { filter, sortBy, sort, limit } = req.query;
+
+        const query: any = {};
+        if (typeof filter === "string") {
+            query.genre = filter.toUpperCase();
+        }
+
+        let sortByField = "createdAt";
+        if (typeof sortBy === "string") {
+            sortByField = sortBy;
+        }
+
+        let sortOrder = 1;
+        if (typeof sort === "string") {
+            sortOrder = sort.toLowerCase() === "desc" ? -1 : 1;
+        }
+
+        const sortObj: any = {};
+        sortObj[sortByField] = sortOrder;
+
+        const limitNum = typeof limit === "string" ? parseInt(limit, 10) : 10;
+
+        const books = await Book.find(query)
+            .sort(sortObj)
+            .limit(limitNum);
+
         res.status(200).json({
             success: true,
             message: "Books retrieved successfully",
             data: books,
         });
     } catch (error) {
-        (next)
+        next(error);
     }
 });
+
+
 
 // Get specific book data
 booksRouter.get("/:bookId", async (req: Request, res: Response, next) => {
