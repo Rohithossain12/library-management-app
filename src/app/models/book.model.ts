@@ -23,5 +23,31 @@ const bookSchema = new Schema<IBook>({
     timestamps: true
 });
 
+
+// Pre-save middleware
+bookSchema.pre("save", function (next) {
+    console.log(`Book titled "${this.title}" is about to be saved.`);
+    if (this.copies === 0) {
+        this.available = false;
+    }
+    next();
+});
+
+// Post-save middleware
+bookSchema.post("save", function (doc) {
+    console.log(`Book titled "${doc.title}" was saved successfully.`);
+});
+
+// Pre-update middleware
+bookSchema.pre("findOneAndUpdate", function (next) {
+    console.log("About to update a book...");
+    next();
+});
+
+// Post-find middleware
+bookSchema.post("find", function (docs) {
+    console.log(`Books found: ${docs.length}`);
+});
+
 // create model
 export const Book = model<IBook>("Book", bookSchema);
