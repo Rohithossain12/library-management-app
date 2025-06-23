@@ -1,6 +1,7 @@
 import express, { Application, Request, Response } from "express";
 import { booksRouter } from "./app/controllers/book.controller";
 import { borrowRouter } from "./app/controllers/borrow.controller";
+import { globalErrorHandler } from "./middlewares/globalErrorHandler";
 
 
 const app: Application = express();
@@ -10,6 +11,22 @@ app.use(express.json());
 
 app.use("/api/books", booksRouter),
 app.use("/api/borrow", borrowRouter),
+
+// 404 Not Found Handler
+app.use((req: Request, res: Response) => {
+  res.status(404).json({
+    success: false,
+    message: "Route not found",
+    error: {
+      path: req.originalUrl,
+      method: req.method,
+    },
+  });
+});
+
+
+// Global Error Handler
+app.use(globalErrorHandler);
 
 
 

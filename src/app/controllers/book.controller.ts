@@ -4,7 +4,7 @@ import { Book } from "../models/book.model";
 export const booksRouter = express.Router();
 
 // Create book data
-booksRouter.post("/", async (req: Request, res: Response) => {
+booksRouter.post("/", async (req: Request, res: Response, next) => {
     try {
         const bookData = req.body;
         const book = await Book.create(bookData);
@@ -14,12 +14,12 @@ booksRouter.post("/", async (req: Request, res: Response) => {
             data: book,
         });
     } catch (error) {
-        console.log(error);
+        next(error)
     }
 });
 
 // Get all books
-booksRouter.get("/", async (req: Request, res: Response) => {
+booksRouter.get("/", async (req: Request, res: Response, next) => {
     try {
         const books = await Book.find();
         res.status(200).json({
@@ -28,12 +28,12 @@ booksRouter.get("/", async (req: Request, res: Response) => {
             data: books,
         });
     } catch (error) {
-        console.log(error);
+        (next)
     }
 });
 
 // Get specific book data
-booksRouter.get("/:bookId", async (req: Request, res: Response) => {
+booksRouter.get("/:bookId", async (req: Request, res: Response, next) => {
     try {
         const id = req.params.bookId;
         const book = await Book.findById(id);
@@ -43,12 +43,12 @@ booksRouter.get("/:bookId", async (req: Request, res: Response) => {
             data: book,
         });
     } catch (error) {
-        console.log(error);
+        next(error)
     }
 });
 
 // Update book
-booksRouter.patch("/:bookId", async (req: Request, res: Response) => {
+booksRouter.put("/:bookId", async (req: Request, res: Response, next) => {
     try {
         const id = req.params.bookId;
         const bookData = req.body;
@@ -59,12 +59,12 @@ booksRouter.patch("/:bookId", async (req: Request, res: Response) => {
             data: book,
         });
     } catch (error) {
-        console.log(error);
+        next(error)
     }
 });
 
 // Delete book
-booksRouter.delete("/:bookId", async (req: Request, res: Response) => {
+booksRouter.delete("/:bookId", async (req: Request, res: Response, next) => {
     try {
         const id = req.params.bookId;
         await Book.findByIdAndDelete(id);
@@ -74,6 +74,6 @@ booksRouter.delete("/:bookId", async (req: Request, res: Response) => {
             data: null,
         });
     } catch (error) {
-        console.log(error);
+        next(error)
     }
 });
