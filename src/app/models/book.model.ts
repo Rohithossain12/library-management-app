@@ -49,5 +49,18 @@ bookSchema.post("find", function (docs) {
     console.log(`Books found: ${docs.length}`);
 });
 
+
+// Instance Method 
+bookSchema.methods.updateAvailabilityAfterBorrow = function (quantity: number) {
+    this.copies -= quantity;
+    if (this.copies <= 0) {
+        this.copies = 0;
+        this.available = false;
+    } else {
+        this.available = true;
+    }
+    return this.save();
+};
+
 // create model
 export const Book = model<IBook>("Book", bookSchema);

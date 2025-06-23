@@ -20,9 +20,8 @@ borrowRouter.post("/", async (req: Request, res: Response) => {
       return res.status(400).json({ success: false, message: "Not enough copies available" });
     }
 
-    existingBook.copies -= quantity;
-    existingBook.available = existingBook.copies > 0;
-    await existingBook.save();
+    // Use instance method instead of manual update
+    await existingBook.updateAvailabilityAfterBorrow(quantity);
 
     const borrowRecord = new Borrow({ book, quantity, dueDate });
     const savedBorrow = await borrowRecord.save();
@@ -40,6 +39,7 @@ borrowRouter.post("/", async (req: Request, res: Response) => {
     });
   }
 });
+
 
 
 
