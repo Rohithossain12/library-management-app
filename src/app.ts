@@ -12,6 +12,12 @@ app.use(express.json());
 app.use("/api/books", booksRouter);
 app.use("/api/borrow", borrowRouter);
 
+
+app.get("/", (req: Request, res: Response) => {
+    res.send('Welcome to Library Management app')
+})
+
+
 // 404 Not Found Handler
 app.use((req: Request, res: Response) => {
   res.status(404).json({
@@ -30,8 +36,6 @@ app.use(globalErrorHandler);
 
 
 
-app.get("/", (req: Request, res: Response) => {
-    res.send('Welcome to Library Management app')
-})
+
 
 export default app;
