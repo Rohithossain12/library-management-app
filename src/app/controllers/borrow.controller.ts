@@ -1,44 +1,70 @@
-import express, { Request, Response } from "express"
+import express, { NextFunction, Request, Response } from "express"
 import { Borrow } from "../models/borrow.model";
 import { Book } from "../models/book.model";
-export const borrowRouter = express.Router()
+import { IBook } from "../interfaces/book.interface";
+export const borrowRouter = express.Router();
 
 
-
-
-
-borrowRouter.post("/", async (req: Request, res: Response) => {
+borrowRouter.post("/", async (req: Request, res: Response): Promise<void> => {
   try {
     const { book, quantity, dueDate } = req.body;
 
-    const existingBook = await Book.findById(book);
+    if (!book || !quantity || !dueDate) {
+      res.status(400).json({
+        success: false,
+        message: "Book ID, quantity, and due date are required",
+      });
+      return;
+    }
+
+    const duplicate = await Borrow.findOne({
+      book,
+      dueDate: new Date(dueDate),
+    });
+
+    if (duplicate) {
+      res.status(409).json({
+        success: false,
+        message: "This book has already been borrowed for the same due date.",
+      });
+      return;
+    }
+
+    const existingBook = await Book.findById(book) as IBook;
     if (!existingBook) {
-      return res.status(404).json({ success: false, message: "Book not found" });
+      res.status(404).json({
+        success: false,
+        message: "Book not found",
+      });
+      return;
     }
 
     if (existingBook.copies < quantity) {
-      return res.status(400).json({ success: false, message: "Not enough copies available" });
+      res.status(400).json({
+        success: false,
+        message: "Not enough copies available",
+      });
+      return;
     }
 
-    // Use instance method instead of manual update
     await existingBook.updateAvailabilityAfterBorrow(quantity);
 
     const borrowRecord = new Borrow({ book, quantity, dueDate });
     const savedBorrow = await borrowRecord.save();
 
-    return res.status(201).json({
+    res.status(201).json({
       success: true,
       message: "Book borrowed successfully",
       data: savedBorrow,
     });
-  } catch (error) {
-    return res.status(500).json({
+  } catch (error: any) {
+    res.status(500).json({
       success: false,
-      message: "Failed to borrow book",
-      error: (error as Error).message,
+      message: error.message || "Something went wrong",
     });
   }
 });
+
 
 
 
@@ -91,3 +117,4 @@ borrowRouter.get("/", async (req: Request, res: Response) => {
   }
 });
 
+export default borrowRouter;

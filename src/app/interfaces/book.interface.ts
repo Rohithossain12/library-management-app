@@ -8,6 +8,5 @@ export interface IBook extends Document {
   description: string;
   copies: number;
   available: boolean;
-
-  updateAvailabilityAfterBorrow(quantity: number): Promise<IBook>;
+  updateAvailabilityAfterBorrow: (quantity: number) => Promise<IBook>;
 }
