@@ -32,8 +32,7 @@ A RESTful API for managing library books and borrow functionality. Built with **
 
 
 ## 🌐 Live Demo
-
-🔗 [Click here to visit the live API](#)  
+🔗 [Click here to visit the live API](https://library-management-pi-kohl.vercel.app/)  
 
 
 
