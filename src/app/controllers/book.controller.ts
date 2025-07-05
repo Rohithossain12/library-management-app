@@ -75,21 +75,29 @@ booksRouter.get("/:bookId", async (req: Request, res: Response, next) => {
     }
 });
 
-// Update book
+
 booksRouter.put("/:bookId", async (req: Request, res: Response, next) => {
     try {
         const id = req.params.bookId;
         const bookData = req.body;
+
+
+        if ('copies' in bookData) {
+            bookData.available = bookData.copies > 0;
+        }
+
         const book = await Book.findByIdAndUpdate(id, bookData, { new: true });
+
         res.status(200).json({
             success: true,
             message: "Book updated successfully",
             data: book,
         });
     } catch (error) {
-        next(error)
+        next(error);
     }
 });
+
 
 // Delete book
 booksRouter.delete("/:bookId", async (req: Request, res: Response, next) => {
