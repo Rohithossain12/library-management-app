@@ -8,12 +8,9 @@ import cors from "cors";
 const app: Application = express();
 // Middleware
 app.use(express.json());
-
-app.use(
-  cors({
-    origin: ['http://localhost:5173', 'https://library-management-client.vercel.app']
-   })
-);
+app.use(cors({
+  origin:['https://library-management-client-rho.vercel.app']
+}));
 
 
 app.use("/api/books", booksRouter);
