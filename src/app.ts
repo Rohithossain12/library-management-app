@@ -11,7 +11,7 @@ app.use(express.json());
 
 app.use(
   cors({
-    origin: ['http://localhost:5173', 'https://library-management-client-rho.vercel.app']
+    origin: ['http://localhost:5173', 'https://library-management-client.vercel.app']
    })
 );
 
